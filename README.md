@@ -62,7 +62,7 @@ Before you start, the `api` server and `swagger` should be enabled. You can go t
 appd start --home <addr-1>
 ```
 
-## 8. Add more validators into the blockchain
+## 8. Config the next chain node to sync with the blockchain
 
 Go to the folders that contain the `config` and `data` directory of the chains:
 
@@ -86,3 +86,28 @@ seeds="<node-id-1>@<listen-addr>:<port>,<node-id-1>@<listen-addr>:<port>"
 persistent_peers="<node-id-1>@<listen-addr>:<port>,<node-id-1>@<listen-addr>:<port>"
 
 ```
+
+After everything is done, you can start the node with:
+
+```
+appd start <addr-2>
+```
+
+## 9. Run the node as a validator
+
+Run:
+
+```
+appd tx staking create-validator \                          --amount=<amount>stake \
+  --pubkey=$(appd tendermint show-validator --home <addr-2>) \
+  --moniker=<moniker2> \
+  --chain-id=<your-chain-id> \
+  --commission-rate="0.10" \
+  --commission-max-rate="0.20" \
+  --commission-max-change-rate="0.01" \
+  --min-self-delegation="1000000" \
+  --gas="auto" \
+  --from=<key-name-2> --home <addr-2>
+```
+
+Restart the node, and you will have another validator.
