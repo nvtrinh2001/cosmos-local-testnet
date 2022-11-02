@@ -3,7 +3,7 @@
 ## 1. Prerequisites
 
 ```
-[Ignite CLI](https://docs.ignite.com)
+Ignite CLI
 ```
 
 ## 2. Initialize your chain
