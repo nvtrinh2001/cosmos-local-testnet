@@ -95,7 +95,7 @@ appd start <addr-2>
 
 ## 9. Run the node as a validator
 
-Run:
+Create a staking transaction by running:
 
 ```
 appd tx staking create-validator \                          --amount=<amount>stake \
