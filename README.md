@@ -43,7 +43,7 @@ appd init <moniker2> --home <addr-2> --chain-id <your-chain-id>
 
 ```
 appd add-genesis-account $(appd keys show <key-name-1> -a) <amount>stake --home <addr-1>
-appd add-genesis-account $(appd keys show <key-name-2> -a) <amount>stake --home <addr-2>
+appd add-genesis-account $(appd keys show <key-name-2> -a) <amount>stake --home <addr-1>
 ...
 ```
 
