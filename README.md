@@ -87,18 +87,43 @@ persistent_peers="<node-id-1>@<listen-addr>:<port>,<node-id-1>@<listen-addr>:<po
 
 ```
 
+To get the node id, run this command:
+
+```
+appd tendermint show-node-id
+```
+
 After everything is done, you can start the node with:
 
 ```
 appd start <addr-2>
 ```
 
+NOTE: in local development, if using `127.0.0.1 and the node throws an error, you can try `localhost` instead.
+
 ## 9. Run the node as a validator
+
+Before sending the create-validator transaction, you need to send some tokens from the existing validator to the new ones. Run this command:
+
+```
+appd q account <account-addr> --chain-id testnet --home <home-dir>
+```
+
+You might see an error is thrown saying that the account is not found. This problem may occur if the account was created on a different node or on a different chain with a different chain ID. When querying for an account, the node will look for the account's address in its local state database. If the account was not created on that node or chain, then the node will not have the account's address in its local state database and will return an error.
+
+To solve this problem, you can send tokens from the existing validator to the new ones, so that the validator can recognize your new account address. Run this command:
+
+```
+appd tx bank send <account-addr> <amount>stake --chain-id testnet --home <home-dir>
+```
+
+Now you can run the previous command to check the balance of the account.
 
 Create a staking transaction by running:
 
 ```
-appd tx staking create-validator \                          --amount=<amount>stake \
+appd tx staking create-validator \                          
+  --amount=<amount>stake \
   --pubkey=$(appd tendermint show-validator --home <addr-2>) \
   --moniker=<moniker2> \
   --chain-id=<your-chain-id> \
@@ -111,3 +136,24 @@ appd tx staking create-validator \                          --amount=<amount>sta
 ```
 
 Restart the node, and you will have another validator.
+
+You can check the status of all validators with:
+
+```
+appd tendermint show-validator --home <addr-2>
+```
+
+or with:
+
+```
+appd q staking validator cosmosvaloper1yourvalidatoraddress --chain-id=testnet --node=tcp://127.0.0.1:26657
+```
+
+If the status of the validator is `BOND_STATUS_UNBONDED`, you might need to delegate more tokens, you can run:
+
+```
+appd tx staking delegate <account-addr> <amount>stake --chain-id testnet --home <home-dir>
+```
+
+If the status of the validator is `BOND_STATUS_BONDED`, then congrats, you have a new validator for your network.
+
